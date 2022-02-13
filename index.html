@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image to ascii</title>
+  <link rel="stylesheet" href="./styles/css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
+  <script defer src="./js/index.js"></script>
+</head>
+
+<body>
+
+
+  <div class="page">
+    <div id="tools-container">
+      <h1>Image to ascii</h1>
+
+      <div class="tool upload">
+        <label for="image">Upload an image you want to convert to ascii</label>
+        <input type="file" name="image" accept=".png, .jpg, .jpeg" multiple="false" id="image">
+      </div>
+
+      <div class="tool threshold">
+        <label for="threshold">Threshold</label>
+        <input type="range" name="threshold" min="1" max="100" id="threshold">
+      </div>
+
+      <div class="tool invert">
+        <input type="checkbox" name="invert" id="invert">
+        <label for="invert">Invert</label>
+      </div>
+
+    </div>
+    <div class="scroll-container">
+      <div id="ascii-container"></div>
+    </div>
+  </div>
+
+</body>
+
+</html>
