@@ -1,29 +1,40 @@
 const originalDensity = "Ñ@#W$9876543210?!abc;:+=-,._ ";
+// const originalDensity = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,^`'. ";
 let density = originalDensity;
 let picture;
-let img;
 let invertToggle = false;
-let imagePath;
 
 function setup() {
   const imageElement = document.getElementById('image')
   imageElement.addEventListener('change', (e) => {
-    let urlOfImageFile = URL.createObjectURL(e.target.files[0]);
-    picture = loadImage(urlOfImageFile)
-    requestAnimationFrame(() => {
+    if (e.target.files[0]) {
+      let urlOfImageFile = URL.createObjectURL(e.target.files[0]);
+      picture = loadImage(urlOfImageFile);
+      picture.loadPixels();
       requestAnimationFrame(() => {
-        picture.loadPixels();
-        loadAscii()
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            picture.resize(50, 0);
+            picture.loadPixels();
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                  loadAscii();
+                })
+              })
+            })
+          })
+        })
       })
-    })
+    }
   })
 
   const thresholdElement = document.getElementById('threshold')
   thresholdElement.addEventListener('change', (e) => {
     const value = parseInt(e.target.value)
     let newDensity = originalDensity
-    let count = 50
-    if (value < 50) {
+    let count = 30
+    if (value < count) {
       while (count > value) {
         if (newDensity.length > 1) {
           newDensity = newDensity.slice(0, newDensity.length - 1)
@@ -36,7 +47,6 @@ function setup() {
         count += 1
       }
     }
-
     setDensity(newDensity)
     loadAscii()
   })
@@ -48,8 +58,6 @@ function setup() {
   })
 
   noCanvas();
-  picture.loadPixels();
-  loadAscii()
 }
 
 function draw() {
@@ -83,6 +91,7 @@ function loadAscii() {
   const ascii = buildAscii()
   const container = document.getElementById('ascii-container')
   if (container) {
+    container.innerHTML = ''
     container.innerHTML = ascii
   }
 }
