@@ -65,7 +65,7 @@ export default defineComponent({
           const charIndex = p5.value.floor(p5.value.map(avg, 0, 255, invertToggle.value ? 0 : len, invertToggle.value ? len : 0));
 
           const c = density.value.charAt(charIndex);
-          if (c == " ") row += "&nbsp;";
+          if (c == " " || charIndex > density.value.length - 1) row += "&nbsp;";
           else row += c;
         }
         ascii += row + '<br />'
