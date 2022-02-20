@@ -1,0 +1,15 @@
+.home {
+  .heading {
+    color: white;
+    text-align: center;
+    width: max-content;
+    margin: 2.5rem auto;
+    h1 {
+      font-size: 3rem;
+      font-weight: bold;
+    }
+    &_input {
+      margin-top: .7rem;
+    }
+  }
+}
