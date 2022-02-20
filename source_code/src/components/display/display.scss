@@ -1,7 +1,6 @@
 .display {
   border: 1px solid white;
   border-radius: .5rem;
-  padding: .55rem;
   width: max-content;
   max-width: 60vw;
   max-height: 60vh;
@@ -35,5 +34,7 @@
     width: 100%;
     height: 100%;
     overflow: auto;
+    padding: 4px;
+    border-radius: 0 .395rem .395rem 0;
   }
 }

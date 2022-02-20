@@ -1,4 +1,4 @@
-import { defineComponent, nextTick, ref, watch } from "vue";
+import { defineComponent, nextTick, onMounted, ref, watch } from "vue";
 import { waitTickAmount } from '@/utils/waitTickAmount'
 const P5 = require('p5');
 
@@ -88,7 +88,7 @@ export default defineComponent({
         canvas.value.innerHTML = ascii.value
         const canvasBounds = canvas.value.getBoundingClientRect()
         const displayBounds = display.value.getBoundingClientRect()
-        const newHeight = canvasBounds.height + Math.ceil(settings.value.fontSize - settings.value.leading)
+        const newHeight = canvasBounds.height + Math.ceil(settings.value.fontSize - settings.value.leading) + 8
         canvasStyles.value = {
           'font-size': settings.value.fontSize + 'pt',
           'line-height': settings.value.leading + 'pt',
@@ -97,6 +97,10 @@ export default defineComponent({
         }
       }
     }
+
+    onMounted(() => {
+      handleNewFile()
+    })
 
     watch(props.file, () => {
       handleNewFile()
