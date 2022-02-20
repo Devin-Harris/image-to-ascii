@@ -1,0 +1,138 @@
+.display-settings {
+  background-color: white;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: .55rem .45rem;
+  
+  &.opened {
+    padding: .55rem 1rem;
+    .display-settings_heading {
+      justify-content: space-between;
+      &_lhs i:hover {
+        color: black;
+        cursor: default;
+      }
+    }
+
+    .display-settings_footing {
+      flex-direction: row;
+      justify-content: flex-start;
+      width: 100%;
+      .icon {
+        margin-right: .5rem;
+        &.rounded-icon {
+          height: auto;
+          width: auto;
+          border-radius: .5rem;
+          padding: .5rem 1rem;
+          font-weight: bold;
+        }
+        i {
+          margin-top: unset;
+          margin-right: .5rem;
+        }
+      }
+    }
+  }
+
+  &_heading {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    &_lhs {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      p {
+        font-size: 1.25rem;
+        margin-left: .5rem; 
+        font-weight: bold;
+      }
+      i {
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: .3s;
+        &:hover {
+          color: rgb(26, 26, 26);
+        }
+      }
+    }
+    &_rhs {
+      font-size: 1.125rem;
+      cursor: pointer;
+      transition: .3s;
+      &:hover {
+        color: rgb(26, 26, 26);
+      }
+    }
+  }
+  
+  &_controls {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem 0;
+
+    &_lhs, &_rhs {
+      width: calc(50% - 8px);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      .control {
+        width: 100%;
+      }
+    }
+
+    &_divider {
+      height: 100%;
+      background-color: #EBEBEB;
+      width: 2px;
+      margin: 0 4px;
+    }
+  }
+
+  &_footing {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    .icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: .5rem;
+      &.rounded-icon {
+        border: 2px solid black;
+        border-radius: 50%;
+        padding: .5rem;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: .3s;
+        &:hover {
+          background-color: rgb(240, 240, 240);
+          color: rgb(17, 17, 17);
+          border-color: rgb(17, 17, 17);
+        }
+      }
+      i {
+        font-size: 1.25rem;
+
+      }
+    }
+  }
+}

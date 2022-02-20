@@ -1,9 +1,16 @@
-import { defineComponent, nextTick, onMounted, ref, watch } from "vue";
+import { defineComponent, nextTick, onMounted, Ref, ref, watch } from "vue";
 import { waitTickAmount } from '@/utils/waitTickAmount'
+import displaySettings from '@/components/display-settings/index.vue'
+import { ISettings } from "@/interfaces/ISettings";
+
 const P5 = require('p5');
 
 export default defineComponent({
   name: 'display',
+
+  components: {
+    displaySettings
+  },
 
   props: {
     file: {
@@ -20,7 +27,7 @@ export default defineComponent({
     const ascii = ref('');
     const canvas = ref();
     const display = ref();
-    const settings = ref({
+    const settings: Ref<ISettings | undefined> = ref({
       fontSize: 10,
       leading: 7,
       width: 50,
@@ -31,6 +38,7 @@ export default defineComponent({
       color: '#FFFFFF',
       luminance: false,
       saturate: false,
+      threshold: originalDensity.value.length
     })
     const canvasStyles = ref({
       'font-size': '10pt',
@@ -68,9 +76,14 @@ export default defineComponent({
           if (c == " " || charIndex > density.value.length - 1) row += "&nbsp;";
           else row += c;
         }
-        ascii += row + '<br />'
+        ascii += row + '\n'
       }
       return ascii
+    }
+
+    function loadAsciiIntoHTML() {
+      ascii.value = buildAscii();
+      canvas.value.innerHTML = ascii.value.split('\n').join('<br />')
     }
 
     async function handleNewFile(): Promise<any> {
@@ -84,18 +97,50 @@ export default defineComponent({
         picture.value.resize(50, 0);
         picture.value.loadPixels();
 
-        ascii.value = buildAscii();
-        canvas.value.innerHTML = ascii.value
+        loadAsciiIntoHTML()
         const canvasBounds = canvas.value.getBoundingClientRect()
         const displayBounds = display.value.getBoundingClientRect()
-        const newHeight = canvasBounds.height + Math.ceil(settings.value.fontSize - settings.value.leading) + 8
-        canvasStyles.value = {
-          'font-size': settings.value.fontSize + 'pt',
-          'line-height': settings.value.leading + 'pt',
-          width: '100%',
-          'height': (newHeight > displayBounds.height ? displayBounds.height : newHeight) + 'px',
+
+        if (settings.value) {
+          const newHeight = canvasBounds.height + Math.ceil(settings.value.fontSize - settings.value.leading) + 8
+          canvasStyles.value = {
+            'font-size': settings.value.fontSize + 'pt',
+            'line-height': settings.value.leading + 'pt',
+            width: '100%',
+            'height': (newHeight > displayBounds.height ? displayBounds.height : newHeight) + 'px',
+          }
         }
       }
+    }
+
+    function handleThresholdChange(threshold: number | undefined) {
+      if (!threshold) return
+
+      let newDensity = originalDensity.value
+      let count = originalDensity.value.length
+      if (threshold < count) {
+        while (count > threshold) {
+          if (newDensity.length > 1) {
+            newDensity = newDensity.slice(0, newDensity.length - 1)
+          }
+          count -= 1
+        }
+      } else {
+        while (count < threshold) {
+          newDensity += ' '
+          count += 1
+        }
+      }
+      density.value = newDensity
+    }
+
+    function handleSettingsSync(newSettings: ISettings | undefined) {
+      if (settings.value?.threshold !== newSettings?.threshold) {
+        handleThresholdChange(newSettings?.threshold)
+      }
+
+      settings.value = newSettings ? { ...newSettings } : undefined
+      loadAsciiIntoHTML()
     }
 
     onMounted(() => {
@@ -115,6 +160,8 @@ export default defineComponent({
       handleNewFile,
       picture,
       settings,
+      handleSettingsSync,
+      originalDensity
     }
   },
 })

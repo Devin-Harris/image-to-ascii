@@ -1,9 +1,14 @@
 .home {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   .heading {
     color: white;
     text-align: center;
-    width: max-content;
     margin: 2.5rem auto;
+    width: max-content;
     h1 {
       font-size: 3rem;
       font-weight: bold;

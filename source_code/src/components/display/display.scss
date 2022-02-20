@@ -4,7 +4,7 @@
   width: max-content;
   max-width: 60vw;
   max-height: 60vh;
-  height: calc(100% + 20px);
+  height: 100%;
   margin: 0 auto;
   position: relative;
   display: flex;
@@ -24,6 +24,10 @@
     border: 2px dashed white;
     border-radius: .7rem;
     z-index: -1;
+  }
+
+  :deep(.display-settings) {
+    border-radius: .395rem 0 0 .395rem;
   }
 
   .canvas {

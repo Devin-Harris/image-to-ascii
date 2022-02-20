@@ -10,7 +10,9 @@
       ></fileInput>
     </div>
 
-    <display v-if="file && file.value" :file="file"></display>
+    <div class="display-container">
+      <display v-if="file && file.value" :file="file"></display>
+    </div>
   </div>
 </template>
 
