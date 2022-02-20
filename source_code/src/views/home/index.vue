@@ -5,10 +5,14 @@
       <p>Upload an image you want to convert to ascii</p>
       <fileInput
         class="heading_input"
-        :fileInputLabel="file?.name ?? 'Choose an image'"
+        :fileInputLabel="file?.value?.name ?? 'Choose an image'"
         @input-change="inputChange($event)"
       ></fileInput>
     </div>
+
+    <!-- <template v-if="file.value"> -->
+    <display v-show="file && file.value" :file="file"></display>
+    <!-- </template> -->
   </div>
 </template>
 

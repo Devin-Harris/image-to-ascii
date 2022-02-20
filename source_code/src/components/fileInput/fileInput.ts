@@ -15,6 +15,10 @@ export default defineComponent({
     multiple: {
       type: Boolean,
       default: false
+    },
+    fileTypes: {
+      type: String,
+      default: '.png,.jpg,.jpeg'
     }
   },
 

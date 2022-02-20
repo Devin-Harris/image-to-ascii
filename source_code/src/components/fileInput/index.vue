@@ -6,6 +6,7 @@
       name="file-input"
       class="file-input_input"
       :multiple="multiple"
+      :accept="fileTypes"
       @change="inputChange($event)"
     />
 
