@@ -2,6 +2,7 @@ import { defineComponent, nextTick, onMounted, Ref, ref, watch } from "vue";
 import { waitTickAmount } from '@/utils/waitTickAmount'
 import displaySettings from '@/components/display-settings/index.vue'
 import { ISettings } from "@/interfaces/ISettings";
+import { downloadImageData } from "@/utils/downloadImageData";
 
 const P5 = require('p5');
 
@@ -44,7 +45,6 @@ export default defineComponent({
       'font-size': '10pt',
       'line-height': '7pt',
       width: '100%',
-      height: '100%'
     })
 
 
@@ -98,16 +98,11 @@ export default defineComponent({
         picture.value.loadPixels();
 
         loadAsciiIntoHTML()
-        const canvasBounds = canvas.value.getBoundingClientRect()
-        const displayBounds = display.value.getBoundingClientRect()
-
         if (settings.value) {
-          const newHeight = canvasBounds.height + Math.ceil(settings.value.fontSize - settings.value.leading) + 8
           canvasStyles.value = {
             'font-size': settings.value.fontSize + 'pt',
             'line-height': settings.value.leading + 'pt',
             width: '100%',
-            'height': (newHeight > displayBounds.height ? displayBounds.height : newHeight) + 'px',
           }
         }
       }
@@ -143,6 +138,32 @@ export default defineComponent({
       loadAsciiIntoHTML()
     }
 
+    function handleDownloadClick() {
+      const tempCanvas = document.createElement('canvas')
+      const canvasBounds = canvas.value.getBoundingClientRect()
+      const fontSize = settings.value?.fontSize ? settings.value?.fontSize : 10
+      const leading = settings.value?.leading ? settings.value?.leading : 7
+      const height = settings.value?.height ? settings.value?.height : 50
+      tempCanvas.height = height * fontSize + fontSize - leading + 8
+      tempCanvas.width = canvasBounds.width + 8
+      const ctx = tempCanvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = settings.value ? String(settings.value.background) : '#000000';
+        ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+        ctx.font = `${fontSize}pt Courier New`;
+        ctx.fillStyle = settings.value ? String(settings.value.color) : '#FFFFFF'
+        const splitAscii = ascii.value.split('\n')
+        for (let i = 0; i < splitAscii.length; i++) {
+          const mappedText = splitAscii[i].split('&nbsp;').join(' ')
+          ctx.fillText(mappedText, 0, (i + 1) * fontSize);
+        }
+      }
+
+      const canvasDataUrl = tempCanvas.toDataURL();
+      downloadImageData(canvasDataUrl)
+    }
+
     onMounted(() => {
       handleNewFile()
     })
@@ -161,7 +182,8 @@ export default defineComponent({
       picture,
       settings,
       handleSettingsSync,
-      originalDensity
+      originalDensity,
+      handleDownloadClick
     }
   },
 })

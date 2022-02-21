@@ -37,11 +37,11 @@
     </div>
 
     <div class="display-settings_footing">
-      <div class="icon rounded-icon">
+      <div class="icon rounded-icon" @click="triggerImageDownload()">
         <i class="fa fa-download"></i>
         <p v-if="!collapsed">Download</p>
       </div>
-      <div class="icon rounded-icon">
+      <div class="icon rounded-icon" @click="triggerCopyToClipboard()">
         <i class="fa fa-copy"></i>
         <p v-if="!collapsed">Copy</p>
       </div>

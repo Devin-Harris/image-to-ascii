@@ -1,10 +1,16 @@
 import { ISettings } from "@/interfaces/ISettings";
+import { copyToClipboard } from "@/utils/copyToClipboard";
+import { downloadImageData } from "@/utils/downloadImageData";
 import { defineComponent, onMounted, PropType, Ref, ref, watch } from "vue";
 
 export default defineComponent({
   name: 'display-settings',
 
   props: {
+    ascii: {
+      type: String,
+      default: ''
+    },
     settings: {
       type: Object as PropType<ISettings | undefined>,
       default: {
@@ -27,7 +33,7 @@ export default defineComponent({
     }
   },
 
-  emits: ['sync-settings'],
+  emits: ['sync-settings', 'download-click'],
 
   setup(props, { emit }) {
     const collapsed = ref(false)
@@ -57,6 +63,14 @@ export default defineComponent({
       emit('sync-settings', mutatedSettings.value)
     }
 
+    function triggerCopyToClipboard() {
+      copyToClipboard(props.ascii)
+    }
+
+    function triggerImageDownload() {
+      emit('download-click')
+    }
+
     onMounted(() => {
       initializeSettings()
     })
@@ -66,7 +80,9 @@ export default defineComponent({
       collapse,
       open,
       thresholdChange,
-      mutatedSettings
+      mutatedSettings,
+      triggerCopyToClipboard,
+      triggerImageDownload
     }
   },
 })
