@@ -25,5 +25,5 @@
   </div>
 </template>
 
-<style src="./fileInput.scss" lang="scss" scoped></style>
-<script src="./fileInput.ts" lang="ts"></script>
+<style src="./file-input.scss" lang="scss" scoped></style>
+<script src="./file-input.ts" lang="ts"></script>

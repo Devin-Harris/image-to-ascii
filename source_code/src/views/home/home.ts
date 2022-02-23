@@ -1,6 +1,6 @@
 import { defineComponent, reactive, ref } from "vue";
 import display from '@/components/display/index.vue'
-import fileInput from '@/components/fileInput/index.vue'
+import fileInput from '@/components/file-input/index.vue'
 
 export default defineComponent({
   name: 'home',

@@ -3,11 +3,11 @@
     <div class="heading">
       <h1>Image to ascii</h1>
       <p>Upload an image you want to convert to ascii</p>
-      <fileInput
+      <file-input
         class="heading_input"
         :fileInputLabel="file?.value?.name ?? 'Choose an image'"
         @input-change="inputChange($event)"
-      ></fileInput>
+      ></file-input>
     </div>
 
     <div class="display-container">
