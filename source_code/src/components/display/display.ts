@@ -86,7 +86,7 @@ export default defineComponent({
       canvas.value.innerHTML = ascii.value.split('\n').join('<br />')
     }
 
-    async function handleNewFile(): Promise<any> {
+    async function handleUpdateFile(overwriteSettingsSize = false): Promise<any> {
       if (props.file.value) {
         let urlOfImageFile = URL.createObjectURL(props.file.value);
         picture.value = p5.value.loadImage(urlOfImageFile);
@@ -94,7 +94,18 @@ export default defineComponent({
         // Wait 1 tick for every kb of image data, max of 50
         await waitTickAmount(Math.min(Math.ceil(props.file.value.size / 1000), 50))
 
-        picture.value.resize(50, 0);
+        if (overwriteSettingsSize) {
+          settings.value = settings.value
+            ? {
+              ...settings.value,
+              width: 50,
+              height: Math.round(picture.value.height / (picture.value.width / 50))
+            }
+            : undefined
+          console.log(settings.value)
+        }
+
+        picture.value.resize(settings.value?.width, settings.value?.height);
         picture.value.loadPixels();
 
         loadAsciiIntoHTML()
@@ -134,18 +145,22 @@ export default defineComponent({
         handleThresholdChange(newSettings?.threshold)
       }
 
+      if (settings.value?.width !== newSettings?.width || settings.value?.height !== newSettings?.height) {
+        handleUpdateFile()
+      }
+
       settings.value = newSettings ? { ...newSettings } : undefined
       loadAsciiIntoHTML()
     }
 
     function handleDownloadClick() {
       const tempCanvas = document.createElement('canvas')
-      const canvasBounds = canvas.value.getBoundingClientRect()
       const fontSize = settings.value?.fontSize ? settings.value?.fontSize : 10
       const leading = settings.value?.leading ? settings.value?.leading : 7
       const height = settings.value?.height ? settings.value?.height : 50
+      const width = settings.value?.width ? settings.value?.width : 50
       tempCanvas.height = height * fontSize + fontSize - leading + 8
-      tempCanvas.width = canvasBounds.width + 8
+      tempCanvas.width = width * fontSize + 8
       const ctx = tempCanvas.getContext('2d');
       if (ctx) {
         ctx.fillStyle = settings.value ? String(settings.value.background) : '#000000';
@@ -165,11 +180,11 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      handleNewFile()
+      handleUpdateFile(true)
     })
 
     watch(props.file, () => {
-      handleNewFile()
+      handleUpdateFile(true)
     })
 
     return {
@@ -178,7 +193,7 @@ export default defineComponent({
       canvasStyles,
       density,
       display,
-      handleNewFile,
+      handleUpdateFile,
       picture,
       settings,
       handleSettingsSync,

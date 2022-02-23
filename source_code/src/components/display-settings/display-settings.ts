@@ -1,10 +1,14 @@
 import { ISettings } from "@/interfaces/ISettings";
 import { copyToClipboard } from "@/utils/copyToClipboard";
-import { downloadImageData } from "@/utils/downloadImageData";
 import { defineComponent, onMounted, PropType, Ref, ref, watch } from "vue";
+import SizeControl from '@/components/size-control/index.vue';
 
 export default defineComponent({
   name: 'display-settings',
+
+  components: {
+    SizeControl
+  },
 
   props: {
     ascii: {
@@ -49,8 +53,22 @@ export default defineComponent({
 
     function thresholdChange(e: Event) {
       const target = e.target as HTMLInputElement
-      if (mutatedSettings.value) {
+      if (mutatedSettings.value && mutatedSettings.value.threshold) {
         mutatedSettings.value.threshold = target.valueAsNumber
+        syncSettings()
+      }
+    }
+
+    function widthChange(newWidth: number) {
+      if (mutatedSettings.value && mutatedSettings.value.width) {
+        mutatedSettings.value.width = newWidth
+        syncSettings()
+      }
+    }
+
+    function heightChange(newHeight: number) {
+      if (mutatedSettings.value && mutatedSettings.value.height) {
+        mutatedSettings.value.height = newHeight
         syncSettings()
       }
     }
@@ -75,6 +93,10 @@ export default defineComponent({
       initializeSettings()
     })
 
+    watch(() => props.settings, () => {
+      initializeSettings()
+    })
+
     return {
       collapsed,
       collapse,
@@ -82,7 +104,9 @@ export default defineComponent({
       thresholdChange,
       mutatedSettings,
       triggerCopyToClipboard,
-      triggerImageDownload
+      triggerImageDownload,
+      widthChange,
+      heightChange
     }
   },
 })

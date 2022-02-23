@@ -25,6 +25,15 @@
             @change="thresholdChange($event)"
           />
         </div>
+        <div class="control">
+          <p>Size</p>
+          <size-control
+            :width="mutatedSettings ? mutatedSettings.width : 50"
+            :height="mutatedSettings ? mutatedSettings.height : 50"
+            @width-change="widthChange($event)"
+            @height-change="heightChange($event)"
+          ></size-control>
+        </div>
       </div>
 
       <div class="display-settings_controls_divider"></div>
