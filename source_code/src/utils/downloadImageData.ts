@@ -1,11 +1,13 @@
-export function downloadImageData(imageData: string, imageName = 'image.png') {
-  // create temporary link  
-  const link = document.createElement('a');
-  link.download = imageName; // set the name of the download file 
-  link.href = imageData;
+// @ts-ignore
+import domtoimage from "dom-to-image-more";
 
-  // temporarily add link to body and initiate the download  
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+export function downloadImageFromHtmlElement(elm: HTMLElement, imageName = 'image.jpeg') {
+  return domtoimage
+    .toJpeg(elm)
+    .then((dataUrl: string) => {
+      var link = document.createElement("a");
+      link.download = imageName;
+      link.href = dataUrl;
+      link.click();
+    });
 }

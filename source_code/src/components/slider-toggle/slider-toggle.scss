@@ -1,0 +1,45 @@
+.slider-toggle {
+  &_button {
+    border: 1px solid black;
+    width: 3.25rem;
+    height: 1.25rem;
+    border-radius: 50rem;
+    position: relative;
+    cursor: pointer;
+    transition: .3s;
+    
+    &:hover {
+      background-color: rgb(230, 230, 230);
+      .slider-toggle_button_circle {
+        background-color: rgb(199, 199, 199);
+      }
+    }
+    
+    &_circle {
+      position: absolute;
+      top: 50%;
+      left: .125rem;
+      transform: translateY(-50%);
+      width: .85rem;
+      height: .85rem;
+      border-radius: 50%;
+      border: 1px solid black;
+      transition: .3s;
+    }
+
+    &_slide {
+      background-color: black;
+      &:hover {
+        background-color: rgb(230, 230, 230);
+        .slider-toggle_button_circle {
+          background-color: rgb(199, 199, 199);
+        }
+      }
+      .slider-toggle_button_circle {
+        left: calc(100% - .2rem);
+        transform: translate(-100%, -50%);
+        background-color: white;
+      }
+    }
+  }
+}

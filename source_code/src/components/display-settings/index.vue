@@ -12,7 +12,7 @@
       ></i>
     </div>
 
-    <div v-if="!collapsed" class="display-settings_controls">
+    <div v-if="!collapsed && mutatedSettings" class="display-settings_controls">
       <div class="display-settings_controls_lhs">
         <div class="control">
           <p>Threshold</p>
@@ -34,6 +34,20 @@
             @height-change="heightChange($event)"
           ></size-control>
         </div>
+        <div class="control">
+          <p>Original/Ascii</p>
+          <slider-toggle
+            :value="mutatedSettings ? mutatedSettings.showingAscii : true"
+            @toggle="handleOriginalAsciiToggle($event)"
+          ></slider-toggle>
+        </div>
+        <div class="control">
+          <p>Invert</p>
+          <slider-toggle
+            :value="mutatedSettings ? mutatedSettings.invert : true"
+            @toggle="handleInvertToggle($event)"
+          ></slider-toggle>
+        </div>
       </div>
 
       <div class="display-settings_controls_divider"></div>
@@ -41,6 +55,57 @@
       <div class="display-settings_controls_rhs">
         <div class="control">
           <p>Font Size</p>
+          <input
+            class="control-input"
+            type="number"
+            min="1"
+            :value="mutatedSettings ? mutatedSettings.fontSize : 10"
+            @change="fontSizeChange($event)"
+          />
+        </div>
+        <div class="control">
+          <p>Leading</p>
+          <input
+            class="control-input"
+            type="number"
+            min="1"
+            :value="mutatedSettings ? mutatedSettings.leading : 7"
+            @change="leadingChange($event)"
+          />
+        </div>
+        <div class="control">
+          <p>Background</p>
+        </div>
+        <div class="control">
+          <p>Color</p>
+          <div class="checkboxs">
+            <div class="checkbox">
+              <input
+                type="checkbox"
+                name="luminance"
+                v-model="mutatedSettings.luminance"
+                @change="luminanceChange($event)"
+              />
+              <label
+                for="luminance"
+                @click="luminanceChange($event, !mutatedSettings.luminance)"
+                >Luminance</label
+              >
+            </div>
+            <div class="checkbox">
+              <input
+                type="checkbox"
+                name="saturate"
+                v-model="mutatedSettings.saturate"
+                @change="saturateChange($event)"
+              />
+              <label
+                for="saturate"
+                @click="saturateChange($event, !mutatedSettings.saturate)"
+                >Saturate</label
+              >
+            </div>
+          </div>
         </div>
       </div>
     </div>

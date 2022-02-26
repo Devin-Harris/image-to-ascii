@@ -1,5 +1,9 @@
 <template>
   <div ref="display" class="display">
+    <div v-if="loading" class="loading">
+      <i class="fa fa-spinner fa-spin"></i>
+    </div>
+
     <display-settings
       :ascii="ascii"
       :settings="settings"
@@ -7,7 +11,18 @@
       @sync-settings="handleSettingsSync($event)"
       @download-click="handleDownloadClick()"
     ></display-settings>
-    <div ref="canvas" class="canvas" :style="canvasStyles"></div>
+    <div
+      v-show="settings.showingAscii"
+      ref="canvas"
+      class="canvas"
+      :style="canvasStyles"
+    ></div>
+    <img
+      v-if="!settings.showingAscii"
+      class="original-image"
+      :src="urlOfImageFile"
+      alt="image"
+    />
   </div>
 </template>
 

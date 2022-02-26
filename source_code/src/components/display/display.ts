@@ -2,9 +2,17 @@ import { defineComponent, nextTick, onMounted, Ref, ref, watch } from "vue";
 import { waitTickAmount } from '@/utils/waitTickAmount'
 import displaySettings from '@/components/display-settings/index.vue'
 import { ISettings } from "@/interfaces/ISettings";
-import { downloadImageData } from "@/utils/downloadImageData";
+import { downloadImageFromHtmlElement } from "@/utils/downloadImageData";
+
 
 const P5 = require('p5');
+
+interface CharObject {
+  r: number,
+  g: number,
+  b: number,
+  c: string
+}
 
 export default defineComponent({
   name: 'display',
@@ -24,16 +32,16 @@ export default defineComponent({
     const originalDensity = ref("Ñ@#W$9876543210?!abc;:+=-,._ ");
     const density = ref(originalDensity.value);
     const picture = ref();
-    const invertToggle = ref(false);
     const ascii = ref('');
     const canvas = ref();
     const display = ref();
+    const urlOfImageFile = ref();
     const settings: Ref<ISettings | undefined> = ref({
       fontSize: 10,
       leading: 7,
       width: 50,
       height: 50,
-      showingOriginal: false,
+      showingAscii: true,
       invert: false,
       background: '#000000',
       color: '#FFFFFF',
@@ -46,6 +54,7 @@ export default defineComponent({
       'line-height': '7pt',
       width: '100%',
     })
+    const loading = ref(false)
 
 
     const script = function (p5: any) {
@@ -57,10 +66,23 @@ export default defineComponent({
     }
     const p5 = ref(new P5(script));
 
+    function getColorOfChar(charObject: CharObject) {
+      if (settings.value?.saturate === true) {
+        return `rgb(${charObject.r}, ${charObject.g}, ${charObject.b})`
+      }
+
+      if (settings.value?.luminance === true) {
+        const avg = (charObject.r + charObject.g + charObject.b) / 3;
+        return `rgb(${avg}, ${avg}, ${avg})`
+      }
+
+      return settings.value?.color
+    }
+
     function buildAscii() {
-      let ascii = ''
+      let asciiObjects: CharObject[][] = []
       for (let j = 0; j < picture.value.height; j++) {
-        let row = "";
+        let rowObjects: CharObject[] = [];
         for (let i = 0; i < picture.value.width; i++) {
           const pixelIndex = (i + j * picture.value.width) * 4;
           const r = picture.value.pixels[pixelIndex + 0];
@@ -70,26 +92,59 @@ export default defineComponent({
           const avg = (r + g + b) / 3;
 
           const len = density.value.length;
-          const charIndex = p5.value.floor(p5.value.map(avg, 0, 255, invertToggle.value ? 0 : len, invertToggle.value ? len : 0));
+          const charIndex = p5.value.floor(p5.value.map(avg, 0, 255, settings.value?.invert ? 0 : len, settings.value?.invert ? len : 0));
+
 
           const c = density.value.charAt(charIndex);
-          if (c == " " || charIndex > density.value.length - 1) row += "&nbsp;";
-          else row += c;
+          const charObject: CharObject = {
+            r,
+            g,
+            b,
+            c: c == " " || charIndex > density.value.length - 1 ? " " : c
+          }
+          rowObjects.push(charObject)
         }
-        ascii += row + '\n'
+        asciiObjects.push(rowObjects)
       }
-      return ascii
+      return asciiObjects
     }
 
     function loadAsciiIntoHTML() {
-      ascii.value = buildAscii();
-      canvas.value.innerHTML = ascii.value.split('\n').join('<br />')
+      const asciiObjects = buildAscii()
+      ascii.value = asciiObjects.map((rowObject: CharObject[]) => rowObject.map((charObject: CharObject) => charObject.c).join('')).join('\n');
+      const html = asciiObjects.map((rowObject: CharObject[]) => {
+        const mappedLine = rowObject.map((charObject: CharObject) => {
+          return `
+            <p
+              style="
+                line-height:${settings.value?.leading}pt;
+                font-size: ${settings.value?.fontSize}pt;
+                color: ${getColorOfChar(charObject)};
+              "
+            >
+              ${((charObject.c === ' ') ? '&nbsp;' : charObject.c)}
+            </p>
+          `
+        }).join('')
+
+        return `
+          <div
+            style="
+              display: flex;
+            "
+          >
+            ${mappedLine}
+          </div>
+        `
+      }).join('')
+      canvas.value.innerHTML = html
     }
 
     async function handleUpdateFile(overwriteSettingsSize = false): Promise<any> {
       if (props.file.value) {
-        let urlOfImageFile = URL.createObjectURL(props.file.value);
-        picture.value = p5.value.loadImage(urlOfImageFile);
+        loading.value = true
+        urlOfImageFile.value = URL.createObjectURL(props.file.value);
+        picture.value = p5.value.loadImage(urlOfImageFile.value);
 
         // Wait 1 tick for every kb of image data, max of 50
         await waitTickAmount(Math.min(Math.ceil(props.file.value.size / 1000), 50))
@@ -102,7 +157,6 @@ export default defineComponent({
               height: Math.round(picture.value.height / (picture.value.width / 50))
             }
             : undefined
-          console.log(settings.value)
         }
 
         picture.value.resize(settings.value?.width, settings.value?.height);
@@ -116,6 +170,7 @@ export default defineComponent({
             width: '100%',
           }
         }
+        loading.value = false
       }
     }
 
@@ -153,30 +208,11 @@ export default defineComponent({
       loadAsciiIntoHTML()
     }
 
-    function handleDownloadClick() {
-      const tempCanvas = document.createElement('canvas')
-      const fontSize = settings.value?.fontSize ? settings.value?.fontSize : 10
-      const leading = settings.value?.leading ? settings.value?.leading : 7
-      const height = settings.value?.height ? settings.value?.height : 50
-      const width = settings.value?.width ? settings.value?.width : 50
-      tempCanvas.height = height * fontSize + fontSize - leading + 8
-      tempCanvas.width = width * fontSize + 8
-      const ctx = tempCanvas.getContext('2d');
-      if (ctx) {
-        ctx.fillStyle = settings.value ? String(settings.value.background) : '#000000';
-        ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-
-        ctx.font = `${fontSize}pt Courier New`;
-        ctx.fillStyle = settings.value ? String(settings.value.color) : '#FFFFFF'
-        const splitAscii = ascii.value.split('\n')
-        for (let i = 0; i < splitAscii.length; i++) {
-          const mappedText = splitAscii[i].split('&nbsp;').join(' ')
-          ctx.fillText(mappedText, 0, (i + 1) * fontSize);
-        }
-      }
-
-      const canvasDataUrl = tempCanvas.toDataURL();
-      downloadImageData(canvasDataUrl)
+    async function handleDownloadClick() {
+      loading.value = true
+      await waitTickAmount(10)
+      await downloadImageFromHtmlElement(canvas.value)
+      loading.value = false
     }
 
     onMounted(() => {
@@ -198,7 +234,9 @@ export default defineComponent({
       settings,
       handleSettingsSync,
       originalDensity,
-      handleDownloadClick
+      handleDownloadClick,
+      urlOfImageFile,
+      loading
     }
   },
 })

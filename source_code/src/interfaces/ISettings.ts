@@ -3,7 +3,7 @@ export interface ISettings {
   leading: number;
   width: number;
   height: number;
-  showingOriginal: Boolean;
+  showingAscii: Boolean;
   invert: Boolean;
   background: String;
   color: String;

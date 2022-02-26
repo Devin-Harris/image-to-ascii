@@ -2,12 +2,14 @@ import { ISettings } from "@/interfaces/ISettings";
 import { copyToClipboard } from "@/utils/copyToClipboard";
 import { defineComponent, onMounted, PropType, Ref, ref, watch } from "vue";
 import SizeControl from '@/components/size-control/index.vue';
+import SliderToggle from '@/components/slider-toggle/index.vue';
 
 export default defineComponent({
   name: 'display-settings',
 
   components: {
-    SizeControl
+    SizeControl,
+    SliderToggle
   },
 
   props: {
@@ -22,7 +24,7 @@ export default defineComponent({
         leading: 7,
         width: 50,
         height: 50,
-        showingOriginal: false,
+        showingAscii: true,
         invert: false,
         background: '#000000',
         color: '#FFFFFF',
@@ -59,6 +61,38 @@ export default defineComponent({
       }
     }
 
+    function fontSizeChange(e: Event) {
+      const target = e.target as HTMLInputElement
+      if (mutatedSettings.value && mutatedSettings.value.fontSize) {
+        mutatedSettings.value.fontSize = target.valueAsNumber
+        syncSettings()
+      }
+    }
+
+    function leadingChange(e: Event) {
+      const target = e.target as HTMLInputElement
+      if (mutatedSettings.value && mutatedSettings.value.leading) {
+        mutatedSettings.value.leading = target.valueAsNumber
+        syncSettings()
+      }
+    }
+
+    function luminanceChange(e: Event, labelOverride: null | boolean = null) {
+      const target = e.target as HTMLInputElement
+      if (mutatedSettings.value && mutatedSettings.value.luminance !== null && mutatedSettings.value.luminance !== undefined) {
+        mutatedSettings.value.luminance = labelOverride !== null ? labelOverride : Boolean(target.checked)
+        syncSettings()
+      }
+    }
+
+    function saturateChange(e: Event, labelOverride: null | boolean = null) {
+      const target = e.target as HTMLInputElement
+      if (mutatedSettings.value && mutatedSettings.value.saturate !== null && mutatedSettings.value.saturate !== undefined) {
+        mutatedSettings.value.saturate = labelOverride !== null ? labelOverride : Boolean(target.checked)
+        syncSettings()
+      }
+    }
+
     function widthChange(newWidth: number) {
       if (mutatedSettings.value && mutatedSettings.value.width) {
         mutatedSettings.value.width = newWidth
@@ -69,6 +103,20 @@ export default defineComponent({
     function heightChange(newHeight: number) {
       if (mutatedSettings.value && mutatedSettings.value.height) {
         mutatedSettings.value.height = newHeight
+        syncSettings()
+      }
+    }
+
+    function handleOriginalAsciiToggle(newOriginalAsciiValue: boolean) {
+      if (mutatedSettings.value && mutatedSettings.value.showingAscii !== null && mutatedSettings.value.showingAscii !== undefined) {
+        mutatedSettings.value.showingAscii = newOriginalAsciiValue
+        syncSettings()
+      }
+    }
+
+    function handleInvertToggle(newInvertValue: boolean) {
+      if (mutatedSettings.value && mutatedSettings.value.invert !== null && mutatedSettings.value.invert !== undefined) {
+        mutatedSettings.value.invert = newInvertValue
         syncSettings()
       }
     }
@@ -106,7 +154,13 @@ export default defineComponent({
       triggerCopyToClipboard,
       triggerImageDownload,
       widthChange,
-      heightChange
+      heightChange,
+      handleOriginalAsciiToggle,
+      handleInvertToggle,
+      fontSizeChange,
+      leadingChange,
+      luminanceChange,
+      saturateChange
     }
   },
 })
