@@ -67,8 +67,14 @@ export default defineComponent({
     const p5 = ref(new P5(script));
 
     function getColorOfChar(charObject: CharObject) {
-      if (settings.value?.saturate === true) {
+      if (settings.value?.saturate === true && settings.value?.luminance === true) {
         return `rgb(${charObject.r}, ${charObject.g}, ${charObject.b})`
+      }
+
+      if (settings.value?.saturate === true) {
+        const maxValue = Math.max(charObject.r, charObject.g, charObject.b)
+        const maxDiff = maxValue <= (255 / 2) ? maxValue : 255 - maxValue
+        return `rgb(${charObject.r + maxDiff}, ${charObject.g + maxDiff}, ${charObject.b + maxDiff})`
       }
 
       if (settings.value?.luminance === true) {
