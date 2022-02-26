@@ -220,8 +220,20 @@ export default defineComponent({
 
     async function handleDownloadClick() {
       loading.value = true
+
+      const hs = canvas.value.scrollWidth > canvas.value.clientWidth;
+      const vs = canvas.value.scrollHeight > canvas.value.clientHeight;
+      if (hs || vs) {
+        canvas.value.style.position = 'fixed'
+        canvas.value.style.zIndex = '-1'
+        canvas.value.style.height = 'max-content'
+      }
       await waitTickAmount(10)
       await downloadImageFromHtmlElement(canvas.value)
+      if (hs || vs) {
+        canvas.value.style.position = 'unset'
+        canvas.value.style.height = '100%'
+      }
       loading.value = false
     }
 
