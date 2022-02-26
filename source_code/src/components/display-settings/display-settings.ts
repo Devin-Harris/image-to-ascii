@@ -93,6 +93,22 @@ export default defineComponent({
       }
     }
 
+    function backgroundChange(e: Event) {
+      const target = e.target as HTMLInputElement
+      if (mutatedSettings.value && mutatedSettings.value.background) {
+        mutatedSettings.value.background = target.value
+        syncSettings()
+      }
+    }
+
+    function colorChange(e: Event) {
+      const target = e.target as HTMLInputElement
+      if (mutatedSettings.value && mutatedSettings.value.color) {
+        mutatedSettings.value.color = target.value
+        syncSettings()
+      }
+    }
+
     function widthChange(newWidth: number) {
       if (mutatedSettings.value && mutatedSettings.value.width) {
         mutatedSettings.value.width = newWidth
@@ -160,7 +176,9 @@ export default defineComponent({
       fontSizeChange,
       leadingChange,
       luminanceChange,
-      saturateChange
+      saturateChange,
+      backgroundChange,
+      colorChange
     }
   },
 })

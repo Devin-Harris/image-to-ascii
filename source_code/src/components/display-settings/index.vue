@@ -75,9 +75,21 @@
         </div>
         <div class="control">
           <p>Background</p>
+          <input
+            class="control-input"
+            type="text"
+            :value="mutatedSettings ? mutatedSettings.background : '#000000'"
+            @change="backgroundChange($event)"
+          />
         </div>
         <div class="control">
           <p>Color</p>
+          <input
+            class="control-input"
+            type="text"
+            :value="mutatedSettings ? mutatedSettings.color : '#FFFFFF'"
+            @change="colorChange($event)"
+          />
           <div class="checkboxs">
             <div class="checkbox">
               <input

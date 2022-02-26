@@ -195,9 +195,19 @@ export default defineComponent({
       density.value = newDensity
     }
 
+    function handleBackgroundChange(background: string | undefined) {
+      if (!background) return
+
+      canvas.value.style.backgroundColor = background
+    }
+
     function handleSettingsSync(newSettings: ISettings | undefined) {
       if (settings.value?.threshold !== newSettings?.threshold) {
         handleThresholdChange(newSettings?.threshold)
+      }
+
+      if (settings.value?.background !== newSettings?.background) {
+        handleBackgroundChange(String(newSettings?.background))
       }
 
       if (settings.value?.width !== newSettings?.width || settings.value?.height !== newSettings?.height) {
