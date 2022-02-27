@@ -3,11 +3,13 @@ import { copyToClipboard } from "@/utils/copyToClipboard";
 import { defineComponent, onMounted, PropType, Ref, ref, watch } from "vue";
 import SizeControl from '@/components/size-control/index.vue';
 import SliderToggle from '@/components/slider-toggle/index.vue';
+import ColorPickerIcon from '@/components/color-picker-icon/index.vue'
 
 export default defineComponent({
   name: 'display-settings',
 
   components: {
+    ColorPickerIcon,
     SizeControl,
     SliderToggle
   },

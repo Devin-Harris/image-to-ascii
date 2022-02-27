@@ -105,7 +105,17 @@
           border: none;
           border-bottom: 1px solid black;
         }
-
+        
+        .color-input {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding-bottom: 4px;
+          border-bottom: 1px solid black;
+          .control-input {
+            border-bottom: none;
+          }
+        }
         .checkboxs {
           margin-top: .5rem;
           display: flex;
@@ -166,6 +176,12 @@
           color: rgb(17, 17, 17);
           border-color: rgb(17, 17, 17);
         }
+      }
+      &.disabled {
+        pointer-events: none;
+        background-color: rgb(243, 243, 243);
+        border-color: rgb(214, 214, 214);
+        color: rgb(214, 214, 214);
       }
       i {
         font-size: 1.25rem;

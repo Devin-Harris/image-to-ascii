@@ -1,0 +1,15 @@
+.color-picker-icon {
+  position: relative;
+  &_icon {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    border: 1px solid rgb(204, 204, 204);
+  }
+  &_picker {
+    position: absolute;
+    top: -20px;
+    left: 20px;
+    z-index: 5;
+  }
+}
