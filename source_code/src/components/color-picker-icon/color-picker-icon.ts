@@ -16,21 +16,34 @@ export default defineComponent({
     }
   },
 
+  emits: ['color-change'],
+
   setup(props, { emit }) {
     const colorPickerOpen = ref(false)
+    const picker = ref()
 
     function toggleColorPicker(e: Event) {
       colorPickerOpen.value = !colorPickerOpen.value
     }
 
-    function changeColor(e: Event) {
-      console.log(e)
+    function closeColorPicker() {
+      colorPickerOpen.value = false
+    }
+
+    function clickOutside() {
+      closeColorPicker()
+    }
+
+    function changeColor(e: { hex: string }) {
+      emit('color-change', e.hex)
     }
 
     return {
       changeColor,
       colorPickerOpen,
-      toggleColorPicker
+      toggleColorPicker,
+      picker,
+      clickOutside
     }
   }
 })

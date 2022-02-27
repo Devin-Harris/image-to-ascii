@@ -82,7 +82,10 @@
               :value="mutatedSettings ? mutatedSettings.background : '#000000'"
               @change="backgroundChange($event)"
             />
-            <color-picker-icon :color="mutatedSettings ? mutatedSettings.background : ''"></color-picker-icon>
+            <color-picker-icon
+              :color="mutatedSettings ? mutatedSettings.background : ''"
+              @color-change="backgroundChange({ target: { value: $event } })"
+            ></color-picker-icon>
           </div>
         </div>
         <div class="control">
@@ -94,46 +97,61 @@
               :value="mutatedSettings ? mutatedSettings.color : '#FFFFFF'"
               @change="colorChange($event)"
             />
-            <color-picker-icon :color="mutatedSettings ? mutatedSettings.color : ''"></color-picker-icon>
+            <color-picker-icon
+              :color="mutatedSettings ? mutatedSettings.color : ''"
+              @color-change="colorChange({ target: { value: $event } })"
+            ></color-picker-icon>
           </div>
-            <div class="checkboxs">
-              <div class="checkbox">
-                <input
-                  type="checkbox"
-                  name="luminance"
-                  v-model="mutatedSettings.luminance"
-                  @change="luminanceChange($event)"
-                />
-                <label
-                  for="luminance"
-                  @click="luminanceChange($event, !mutatedSettings.luminance)"
-                  >Luminance</label
-                >
-              </div>
-              <div class="checkbox">
-                <input
-                  type="checkbox"
-                  name="saturate"
-                  v-model="mutatedSettings.saturate"
-                  @change="saturateChange($event)"
-                />
-                <label
-                  for="saturate"
-                  @click="saturateChange($event, !mutatedSettings.saturate)"
-                  >Saturate</label
-                >
-              </div>
+          <div class="checkboxs">
+            <div class="checkbox">
+              <input
+                type="checkbox"
+                name="luminance"
+                v-model="mutatedSettings.luminance"
+                @change="luminanceChange($event)"
+              />
+              <label
+                for="luminance"
+                @click="luminanceChange($event, !mutatedSettings.luminance)"
+                >Luminance</label
+              >
+            </div>
+            <div class="checkbox">
+              <input
+                type="checkbox"
+                name="saturate"
+                v-model="mutatedSettings.saturate"
+                @change="saturateChange($event)"
+              />
+              <label
+                for="saturate"
+                @click="saturateChange($event, !mutatedSettings.saturate)"
+                >Saturate</label
+              >
             </div>
           </div>
         </div>
+      </div>
     </div>
 
     <div class="display-settings_footing">
-      <div class="icon rounded-icon" @click="triggerImageDownload()" :class="{disabled: mutatedSettings ? !mutatedSettings.showingAscii : false}">
+      <div
+        class="icon rounded-icon"
+        @click="triggerImageDownload()"
+        :class="{
+          disabled: mutatedSettings ? !mutatedSettings.showingAscii : false,
+        }"
+      >
         <i class="fa fa-download"></i>
         <p v-if="!collapsed">Download</p>
       </div>
-      <div class="icon rounded-icon" @click="triggerCopyToClipboard()" :class="{disabled: mutatedSettings ? !mutatedSettings.showingAscii : false}">
+      <div
+        class="icon rounded-icon"
+        @click="triggerCopyToClipboard()"
+        :class="{
+          disabled: mutatedSettings ? !mutatedSettings.showingAscii : false,
+        }"
+      >
         <i class="fa fa-copy"></i>
         <p v-if="!collapsed">Copy</p>
       </div>
