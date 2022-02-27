@@ -90,7 +90,14 @@
         </div>
         <div class="control">
           <p>Color</p>
-          <div class="color-input">
+          <div
+            class="color-input"
+            :class="{
+              disabled:
+                mutatedSettings &&
+                (mutatedSettings.luminance || mutatedSettings.saturate),
+            }"
+          >
             <input
               class="control-input"
               type="text"
@@ -99,6 +106,10 @@
             />
             <color-picker-icon
               :color="mutatedSettings ? mutatedSettings.color : ''"
+              :disabled="
+                mutatedSettings &&
+                (mutatedSettings.luminance || mutatedSettings.saturate)
+              "
               @color-change="colorChange({ target: { value: $event } })"
             ></color-picker-icon>
           </div>

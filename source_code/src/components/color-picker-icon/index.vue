@@ -1,6 +1,13 @@
 <template>
   <div class="color-picker-icon" v-click-outside="clickOutside">
     <div
+      v-if="disabled"
+      class="color-picker-icon_icon color-picker-icon_icon-cancel"
+    >
+      <i class="fa fa-ban"></i>
+    </div>
+    <div
+      v-else
       class="color-picker-icon_icon"
       :style="{ 'background-color': color }"
       @click="toggleColorPicker()"
