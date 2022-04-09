@@ -1,0 +1,19 @@
+.simple-select {
+  &_options {
+    width: auto;
+    min-width: 100px;
+    border: 1px solid rgb(221, 221, 221);
+    border-radius: 0.25rem;
+    text-align: left;
+    overflow: hidden;
+    &_option {
+      font-weight: normal;
+      padding: 0.25rem;
+      font-size: 1rem;
+      background-color: white;
+      &:nth-child(even) {
+        background-color: rgb(243, 243, 243);
+      }
+    }
+  }
+}

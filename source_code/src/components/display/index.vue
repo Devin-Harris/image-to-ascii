@@ -9,7 +9,7 @@
       :settings="settings"
       :originalDensity="originalDensity"
       @sync-settings="handleSettingsSync($event)"
-      @download-click="handleDownloadClick()"
+      @download-click="handleDownloadClick($event)"
     ></display-settings>
     <div
       v-show="settings.showingAscii"

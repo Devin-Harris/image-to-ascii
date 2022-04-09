@@ -148,14 +148,22 @@
     <div class="display-settings_footing">
       <div
         class="icon rounded-icon"
-        @click="triggerImageDownload()"
         :class="{
           disabled: mutatedSettings ? !mutatedSettings.showingAscii : false,
         }"
+        @click.stop="toggleDownloadFormats()"
       >
+        <div v-if="showingDownloadFormats" class="download-format-selector">
+          <simple-select
+            :options="downloadFormats"
+            @option-selected="triggerImageDownload($event)"
+            @click-outside="hideDownloadFormats()"
+          ></simple-select>
+        </div>
         <i class="fa fa-download"></i>
         <p v-if="!collapsed">Download</p>
       </div>
+
       <div
         class="icon rounded-icon"
         @click="triggerCopyToClipboard()"
